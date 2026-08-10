@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cordo-postgres
+    ports:
+      - "5454:5432"
+    environment:
+      POSTGRES_DB: DataBase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 41424344
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: cordo-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+volumes:
+  pgdata:
+  redisdata:
