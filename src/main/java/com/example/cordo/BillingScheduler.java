@@ -6,6 +6,7 @@ import com.example.cordo.Entity.UserSubscription;
 import com.example.cordo.repository.redis.PlanRepository;
 import com.example.cordo.repository.jpa.UserSubscriptionRepository;
 import com.example.cordo.repository.jpa.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,7 +27,7 @@ public class BillingScheduler {
     @Autowired
     private PlanRepository planRepository;
 
-
+    @Transactional
     @Scheduled(cron = "0 * * * * *")
     public void runBilling() {
         Iterable<UserSubscription> allSubs = userSubscriptionRepository.findAll();
