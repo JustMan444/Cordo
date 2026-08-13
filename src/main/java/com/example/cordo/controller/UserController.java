@@ -25,13 +25,15 @@ public class UserController {
     private PlanRepository planRepository;
     @Autowired
     private UserSubscriptionRepository userSubscriptionRepository;
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BillingScheduler.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private BaseSecurity baseSecurity;
     @Autowired
     private PlayerService playerService;
+
+
 
     @PostMapping("/api/v1/users")
     public ResponseEntity<UserDTO> registering(
@@ -46,19 +48,7 @@ public class UserController {
             @RequestParam("amount") int amount
     )
     {
-        User user = playerService.getUserFromDT(userID);
-        if(user == null)
-        {
-            logger.info("user not found");
-            return ResponseEntity.notFound().build();
-        }
-        if(user.getBalance() + amount > 2000000000) {
-            logger.info("high balance");
-            return ResponseEntity.badRequest().build();
-        }
-        user.setBalance(user.getBalance() + amount);
-        playerService.SaveUserInDT(user);
-        return ResponseEntity.ok(playerService.getUserDTO(user));
+        playerService.hm(playerService.getUserFromDT(userID),amount);
     }
     @PostMapping("/api/v1/subscriptions/subscribe")
     public ResponseEntity<UserDTO> buy(
