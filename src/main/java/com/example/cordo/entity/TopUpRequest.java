@@ -1,3 +1,3 @@
-package com.example.cordo.Entity;
+package com.example.cordo.entity;
 
 public record TopUpRequest(String userId, int amount) {}

@@ -1,4 +1,4 @@
-package com.example.cordo.Entity;
+package com.example.cordo.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

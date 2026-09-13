@@ -1,11 +1,12 @@
 package com.example.cordo.controller;
 
-import com.example.cordo.Entity.RegisterRequest;
-import com.example.cordo.Entity.SubscribeRequest;
-import com.example.cordo.Entity.TopUpRequest;
-import com.example.cordo.Entity.UserDTO;
+import com.example.cordo.entity.RegisterRequest;
+import com.example.cordo.entity.SubscribeRequest;
+import com.example.cordo.entity.TopUpRequest;
+import com.example.cordo.entity.UserDTO;
 import com.example.cordo.service.PlayerService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,17 +24,17 @@ public class UserController {
     ) {
         return ResponseEntity.ok(playerService.regNewUser(request.password(),request.email()));
     }
-    @PostMapping("/api/v1/users/topup")
+    @PatchMapping("/api/v1/users/topup")
     public ResponseEntity<UserDTO> amount(
             @RequestBody TopUpRequest request
             )
     {
         return ResponseEntity.ok(playerService.topOpBalance(playerService.getUserFromDT(request.userId()), request.amount()));
     }
-    @PostMapping("/api/v1/subscriptions/subscribe")
+    @PatchMapping("/api/v1/subscriptions/subscribe")
     public ResponseEntity<UserDTO> buy(
         @RequestBody SubscribeRequest request
     ) {
-        return ResponseEntity.ok(playerService.buySubcribe(playerService.getUserFromDT(request.userId()), request.planId()));
+        return ResponseEntity.ok(playerService.buySubcribe(request.userId(), request.planId()));
     }
 }

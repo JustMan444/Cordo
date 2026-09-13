@@ -1,4 +1,4 @@
-package com.example.cordo.Entity;
+package com.example.cordo.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;

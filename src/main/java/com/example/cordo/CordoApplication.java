@@ -7,8 +7,8 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
-@EnableRedisRepositories(basePackages = "com.example.cordo.repository.redis")
-@EnableJpaRepositories(basePackages = "com.example.cordo.repository.jpa")
+//@EnableRedisRepositories(basePackages = "com.example.cordo.repository.redis")
+//@EnableJpaRepositories(basePackages = "com.example.cordo.repository.jpa")
 @SpringBootApplication
 public class CordoApplication {
 

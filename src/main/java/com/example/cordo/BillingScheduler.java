@@ -1,8 +1,8 @@
 package com.example.cordo;
 
-import com.example.cordo.Entity.Subscribe;
-import com.example.cordo.Entity.User;
-import com.example.cordo.Entity.UserSubscription;
+import com.example.cordo.entity.Subscribe;
+import com.example.cordo.entity.User;
+import com.example.cordo.entity.UserSubscription;
 import com.example.cordo.repository.redis.PlanRepository;
 import com.example.cordo.repository.jpa.UserSubscriptionRepository;
 import com.example.cordo.repository.jpa.UsersRepository;

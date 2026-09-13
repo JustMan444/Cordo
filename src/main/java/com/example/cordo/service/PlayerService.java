@@ -1,10 +1,9 @@
 package com.example.cordo.service;
 
-import com.example.cordo.BillingScheduler;
-import com.example.cordo.Entity.Subscribe;
-import com.example.cordo.Entity.User;
-import com.example.cordo.Entity.UserDTO;
-import com.example.cordo.Entity.UserSubscription;
+import com.example.cordo.entity.Subscribe;
+import com.example.cordo.entity.User;
+import com.example.cordo.entity.UserDTO;
+import com.example.cordo.entity.UserSubscription;
 import com.example.cordo.exception.BalanceLimitExceededException;
 import com.example.cordo.repository.jpa.UserSubscriptionRepository;
 import com.example.cordo.repository.jpa.UsersRepository;
@@ -13,25 +12,31 @@ import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.logging.Logger;
 
 @Service
 public class PlayerService {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PlayerService.class);
-    @Autowired
     private UsersRepository usersRepository;
-    @Autowired
     private BaseSecurity baseSecurity;
-    @Autowired
     private PlanRepository planRepository;
-    @Autowired
     private UserSubscriptionRepository userSubscriptionRepository;
-
-    @Value("${user.maxBalance}")
     private int maxBalance;
+
+    public PlayerService(UsersRepository usersRepository,
+                         BaseSecurity baseSecurity,
+                         PlanRepository planRepository,
+                         UserSubscriptionRepository userSubscriptionRepository,
+                         @Value("${user.maxBalance:20000000}") int maxBalance) {
+        this.usersRepository = usersRepository;
+        this.baseSecurity = baseSecurity;
+        this.planRepository = planRepository;
+        this.userSubscriptionRepository = userSubscriptionRepository;
+        this.maxBalance = maxBalance;
+    }
+    public PlayerService() {}
+
+
 
 
     public UserDTO getUserDTO(User user) {
@@ -69,21 +74,17 @@ public class PlayerService {
             throw new BalanceLimitExceededException("Balance limit exceeded");
         }
         user.setBalance(user.getBalance() + amount);
-        User realuser = usersRepository.save(user);
+        User realuser = new User("а","g");//usersRepository.save(user);
         UserDTO userDTO = new UserDTO(realuser);
-        return userDTO;
+        return new UserDTO(new User());
     }
     @Transactional
-    public UserDTO buySubcribe(User user,String planID) {
-        if(user == null) {
-            logger.warn("user not found");
-            throw new IllegalArgumentException("User cannot be null");
-        }
-        Subscribe subscribe = planRepository.findById(planID).orElse(null);//redisTemplate.
-        if(subscribe == null) {
-            logger.warn("plan not found");
-            throw  new IllegalArgumentException("plan cannot be null");
-        }
+    public UserDTO buySubcribe(String userId, String planID) {
+        User user = usersRepository.findByIdForUpdate(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Subscribe subscribe = planRepository.findById(planID)
+                .orElseThrow(() -> new IllegalArgumentException("plan cannot be null"));
+
         if(user.getBalance() < subscribe.getMoneyInMonth()) {
             logger.warn("balance is too little");
             throw new BalanceLimitExceededException("balance very little");
