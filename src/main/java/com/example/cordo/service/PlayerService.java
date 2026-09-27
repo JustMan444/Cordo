@@ -1,28 +1,32 @@
 package com.example.cordo.service;
 
-import com.example.cordo.entity.Subscribe;
-import com.example.cordo.entity.User;
-import com.example.cordo.entity.UserDTO;
-import com.example.cordo.entity.UserSubscription;
+import com.example.cordo.entity.*;
 import com.example.cordo.exception.BalanceLimitExceededException;
+import com.example.cordo.exception.UserNotFoundException;
 import com.example.cordo.repository.jpa.UserSubscriptionRepository;
 import com.example.cordo.repository.jpa.UsersRepository;
 import com.example.cordo.repository.redis.PlanRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PlayerService {
+
+    /**
+     * Сервер управления пользователями
+     * Методы:
+     * Регистрирование нового пользователя "regNewUser(String password,String email)"
+     * Пополнения баланса "topUpBalance(String id,int amount)"
+     * Покупка подписки "buySubcribe( userID,String planID)"
+     */
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PlayerService.class);
     private UsersRepository usersRepository;
     private BaseSecurity baseSecurity;
     private PlanRepository planRepository;
     private UserSubscriptionRepository userSubscriptionRepository;
     private int maxBalance;
-
     public PlayerService(UsersRepository usersRepository,
                          BaseSecurity baseSecurity,
                          PlanRepository planRepository,
@@ -34,19 +38,8 @@ public class PlayerService {
         this.userSubscriptionRepository = userSubscriptionRepository;
         this.maxBalance = maxBalance;
     }
-    public PlayerService() {}
 
 
-
-
-    public UserDTO getUserDTO(User user) {
-        UserDTO userDTO = new UserDTO(user);
-        return userDTO;
-    }
-    public User getUser(String password, String email) {
-        User user = new User(password,email);
-        return user;
-    }
     @Transactional
     public UserDTO regNewUser(String password, String email) {
         String realPassword = baseSecurity.encodePassword(password);
@@ -56,17 +49,25 @@ public class PlayerService {
         UserDTO dto = new UserDTO(user);
         return dto;
     }
-    public User getUserFromDT(String userID) {
-        User user = usersRepository.findById(userID).orElse(null);
-        return user;
-    }
-    public void SaveUserInDT(User user) {
-        usersRepository.save(user);
-    }
     @Transactional
-    public UserDTO topOpBalance(User user,int amount) {
+    public UserDTO topUpBalance(String id,int amount) {
+        User user = usersRepository.findByIdForUpdate(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + id));;
+        if(user.getBalance() + amount > maxBalance) {
+            logger.debug("Very big balance error bad request");
+            throw new BalanceLimitExceededException("Balance limit exceeded");
+        }
+        user.setBalance(user.getBalance() + amount);
+
+        User realuser = usersRepository.save(user);
+        UserDTO userDTO = new UserDTO(realuser);
+        return userDTO;
+    }
+    //TODO: Когда нибудь распрощаться с topOpBalanceTestFake сильно бессполезным методом который используется исключительно в тестах но мне его жаль
+    //TODO: Я не знаю возможно оставлю
+    @Transactional
+    public UserDTO topOpBalanceTestFake(User user,int amount) {
         if(user == null) {
-            logger.warn("User not found");
             throw new IllegalArgumentException("User cannot be null");
         }
         if(user.getBalance() + amount > maxBalance) {
@@ -74,6 +75,7 @@ public class PlayerService {
             throw new BalanceLimitExceededException("Balance limit exceeded");
         }
         user.setBalance(user.getBalance() + amount);
+
         User realuser = new User("а","g");//usersRepository.save(user);
         UserDTO userDTO = new UserDTO(realuser);
         return new UserDTO(new User());

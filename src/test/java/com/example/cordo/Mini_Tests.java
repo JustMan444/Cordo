@@ -72,7 +72,7 @@ public class Mini_Tests {
             );
 
             Exception ex = assertThrows(IllegalArgumentException.class,
-                    () -> playerService.topOpBalance(fakeUser,fakeMoney));
+                    () -> playerService.topOpBalanceTestFake(fakeUser,fakeMoney));
          //   playerService.topOpBalance(fakeUser,fakeMoney);
 
 
@@ -93,7 +93,7 @@ public class Mini_Tests {
             );
 
             Exception ex = assertThrows(BalanceLimitExceededException.class,
-                    () -> playerService.topOpBalance(fakeUser,fakeMoney));
+                    () -> playerService.topOpBalanceTestFake(fakeUser,fakeMoney));
 
             assertEquals("Balance limit exceeded",ex.getMessage());
         }
@@ -120,7 +120,7 @@ public class Mini_Tests {
                         """)
 
         )
-                .andExpect(status().isOk())
+                .andExpect(status().is(201))
                 .andExpect(jsonPath("$.balance").value("0"))
                 .andExpect(jsonPath("$.email").value("CommandTesters@mail.ru"));
 

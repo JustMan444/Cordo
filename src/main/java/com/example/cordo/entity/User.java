@@ -1,16 +1,15 @@
 package com.example.cordo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
     private int balance;
     private String password;
     private String email;
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
 
