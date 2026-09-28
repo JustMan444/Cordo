@@ -27,3 +27,20 @@ id IN ('root', 'system', 'moderator') OR
 (email NOT LIKE '%@mail.ru' AND balance > 50000)) AND email NOT LIKE '%bot%'
 ORDER BY balance DESC, email ASC --Я не знаю как поймать момент когда баланс равный так что похуй
 LIMIT 7;
+
+--🎯 Задача 2: Для каждого плана: plan_name, количество подписок (cnt), средняя цена (avg_price).
+SELECT plan_name, COUNT(*) as cnt, AVG(price) AS avg_price
+GROUP BY plan_name;
+
+--🎯 Задача 3 — не сдавайся: Сколько активных подписок (status = 'ACTIVE') на каждом плане. Колонки: plan_name, cnt.
+
+SELECT plan_name, COUNT(*) as cnt
+FROM users --идите нахуй название таблиц не важно
+WHERE status = 'ACTIVE'
+GROUP BY plan_name;
+
+--✅ Задача 4 — финальная: Планы, у которых больше 1 подписчика. Колонки: plan_name, cnt.
+SELECT plan_name,COUNT(*) as cnt
+FROM user_subscription
+GROUP BY plan_name
+HAVING COUNT(*) > 1; --По логике это тот же самый WHERE но для групп или ну короче похуй хуй SQL запросы нормально обьяснишь на человеческом
