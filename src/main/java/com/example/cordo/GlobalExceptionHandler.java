@@ -1,9 +1,6 @@
 package com.example.cordo;
 
-import com.example.cordo.exception.BalanceLimitExceededException;
-import com.example.cordo.exception.NullPointException;
-import com.example.cordo.exception.ResourceNotFoundException;
-import com.example.cordo.exception.UserNotFoundException;
+import com.example.cordo.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -46,6 +43,12 @@ public class GlobalExceptionHandler {
 
         // Отдаем красивый JSON с ошибками полей и статусом 400 Bad Request
         return ResponseEntity.badRequest().body(errors);
+    }
+    @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<String> UserOptimistLockException (
+            UserOptimisticLockingException ex
+    ) {
+        return ResponseEntity.status(409).body("Currently, the user field is occupied by another process.");
     }
 }
 

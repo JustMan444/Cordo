@@ -13,6 +13,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.USER;
+
     public User() {
 
     }
@@ -30,6 +34,7 @@ public class User {
         this.balance = 0;
     }
 
+
     public String getPassword() {return password;}
 
     public void setPassword(String password) {this.password = password;}
@@ -45,4 +50,8 @@ public class User {
     public String getUserId() {return userId;}
 
     public void setUserId(String userId) {this.userId = userId;}
+
+    public Role getRole() {return role;}
+
+    public void setRole(Role role) {this.role = role;}
 }

@@ -1,6 +1,7 @@
 package com.example.cordo.service;
 
 import com.example.cordo.entity.*;
+import com.example.cordo.entity.dto.UserDTO;
 import com.example.cordo.exception.BalanceLimitExceededException;
 import com.example.cordo.exception.UserNotFoundException;
 import com.example.cordo.repository.jpa.UserSubscriptionRepository;
@@ -44,6 +45,7 @@ public class PlayerService {
     public UserDTO regNewUser(String password, String email) {
         String realPassword = baseSecurity.encodePassword(password);
         User user = new User(realPassword,email);
+        user.setRole(Role.USER);
         logger.info("New User has register");
         usersRepository.save(user);
         UserDTO dto = new UserDTO(user);

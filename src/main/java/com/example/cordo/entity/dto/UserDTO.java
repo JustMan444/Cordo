@@ -1,5 +1,7 @@
-package com.example.cordo.entity;
+package com.example.cordo.entity.dto;
 
+
+import com.example.cordo.entity.User;
 
 public class UserDTO {
     private int balance;

@@ -1,4 +1,6 @@
-package com.example.cordo;
+/**
+ * Был удален по причине того что появился более хороший конфиг
+ */
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

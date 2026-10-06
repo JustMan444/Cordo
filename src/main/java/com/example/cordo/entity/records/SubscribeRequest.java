@@ -1,4 +1,4 @@
-package com.example.cordo.records;
+package com.example.cordo.entity.records;
 
 import jakarta.validation.constraints.NotBlank;
 

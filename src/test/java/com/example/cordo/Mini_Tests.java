@@ -1,7 +1,7 @@
 package com.example.cordo;
 import com.example.cordo.controller.UserController;
 import com.example.cordo.entity.User;
-import com.example.cordo.entity.UserDTO;
+import com.example.cordo.entity.dto.UserDTO;
 import com.example.cordo.exception.BalanceLimitExceededException;
 import com.example.cordo.repository.jpa.UsersRepository;
 import com.example.cordo.service.BaseSecurity;
@@ -27,11 +27,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import org.springframework.http.MediaType;
-
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class Mini_Tests {

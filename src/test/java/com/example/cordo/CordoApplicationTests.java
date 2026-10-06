@@ -1,9 +1,7 @@
 package com.example.cordo;
 
-import com.example.cordo.controller.UserController;
 import com.example.cordo.entity.User;
-import com.example.cordo.entity.UserDTO;
-import com.example.cordo.exception.ResourceNotFoundException;
+import com.example.cordo.entity.dto.UserDTO;
 import com.example.cordo.repository.jpa.UsersRepository;
 import com.example.cordo.service.PlayerService;
 import jakarta.transaction.Transactional;
@@ -20,7 +18,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

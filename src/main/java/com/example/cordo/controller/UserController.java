@@ -1,9 +1,9 @@
 package com.example.cordo.controller;
 
-import com.example.cordo.records.RegisterRequest;
-import com.example.cordo.records.SubscribeRequest;
-import com.example.cordo.records.TopUpRequest;
-import com.example.cordo.entity.UserDTO;
+import com.example.cordo.entity.records.RegisterRequest;
+import com.example.cordo.entity.records.SubscribeRequest;
+import com.example.cordo.entity.records.TopUpRequest;
+import com.example.cordo.entity.dto.UserDTO;
 import com.example.cordo.service.PlayerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
