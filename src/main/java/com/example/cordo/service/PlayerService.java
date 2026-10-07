@@ -3,6 +3,7 @@ package com.example.cordo.service;
 import com.example.cordo.entity.*;
 import com.example.cordo.entity.dto.UserDTO;
 import com.example.cordo.exception.BalanceLimitExceededException;
+import com.example.cordo.exception.PlanNotFoundException;
 import com.example.cordo.exception.UserNotFoundException;
 import com.example.cordo.repository.jpa.UserSubscriptionRepository;
 import com.example.cordo.repository.jpa.UsersRepository;
@@ -47,7 +48,7 @@ public class PlayerService {
         User user = new User(realPassword,email);
         user.setRole(Role.USER);
         logger.info("New User has register");
-        usersRepository.save(user);
+        usersRepository.saveAndFlush(user);
         UserDTO dto = new UserDTO(user);
         return dto;
     }
@@ -61,7 +62,7 @@ public class PlayerService {
         }
         user.setBalance(user.getBalance() + amount);
 
-        User realuser = usersRepository.save(user);
+        User realuser = usersRepository.saveAndFlush(user);
         UserDTO userDTO = new UserDTO(realuser);
         return userDTO;
     }
@@ -87,14 +88,14 @@ public class PlayerService {
         User user = usersRepository.findByIdForUpdate(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Subscribe subscribe = planRepository.findById(planID)
-                .orElseThrow(() -> new IllegalArgumentException("plan cannot be null"));
+                .orElseThrow(() -> new PlanNotFoundException("Plan not found"));
 
         if(user.getBalance() < subscribe.getMoneyInMonth()) {
             logger.warn("balance is too little");
             throw new BalanceLimitExceededException("balance very little");
         }
         user.setBalance(user.getBalance() - subscribe.getMoneyInMonth());
-        User real = usersRepository.save(user);
+        User real = usersRepository.saveAndFlush(user);
         UserSubscription sub = new UserSubscription(user.getUserId(), planID, "ACTIVE");
         sub.setNextBillingDate(java.time.LocalDateTime.now().plusMonths(1));
         userSubscriptionRepository.save(sub);

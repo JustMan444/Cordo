@@ -17,6 +17,10 @@ public class User {
     @Column(nullable = false)
     private Role role = Role.USER;
 
+    @Version
+    @Column(nullable = false)
+    private Long version;
+
     public User() {
 
     }
@@ -54,4 +58,8 @@ public class User {
     public Role getRole() {return role;}
 
     public void setRole(Role role) {this.role = role;}
+
+    public Long getVersion() {return version;}
+
+    public void setVersion(Long version) {this.version = version;}
 }

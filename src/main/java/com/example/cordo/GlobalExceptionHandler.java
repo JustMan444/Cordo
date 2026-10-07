@@ -1,10 +1,14 @@
 package com.example.cordo;
 
 import com.example.cordo.exception.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,7 +31,12 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> userNotFound(UserNotFoundException ex) {
-        return ResponseEntity.badRequest().body("User Not Found");
+        return ResponseEntity.notFound().build();
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicate(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "Data integrity violation"));
     }
     @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
     public ResponseEntity<java.util.Map<String, String>> handleValidationExceptions(
@@ -44,11 +53,21 @@ public class GlobalExceptionHandler {
         // Отдаем красивый JSON с ошибками полей и статусом 400 Bad Request
         return ResponseEntity.badRequest().body(errors);
     }
-    @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException.class)
+    @ExceptionHandler(UserOptimisticLockingException.class)
     public ResponseEntity<String> UserOptimistLockException (
             UserOptimisticLockingException ex
     ) {
         return ResponseEntity.status(409).body("Currently, the user field is occupied by another process.");
+    }
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, String>> handleAuth(AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "Invalid credentials"));
+    }
+    @ExceptionHandler(PlanNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handlePlanNotFound(PlanNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", ex.getMessage() != null ? ex.getMessage() : "Plan not found"));
     }
 }
 

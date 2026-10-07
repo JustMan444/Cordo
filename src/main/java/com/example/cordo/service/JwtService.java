@@ -14,10 +14,10 @@ import java.util.List;
 
 @Service
 public class JwtService {
-    @Value("${security-config.key:String}")
-    private static final String SECRET = "Here is NULL!";
-
-    private static final long EXPIRATION_MS = 24 * 60 * 60 * 1000; // 1 день
+    @Value("${jwt.secret}")
+    private  String SECRET = "Here is NULL!";
+    @Value("${jwt.expiration-ms}")
+    private  long EXPIRATION_MS = 24 * 60 * 60 * 1000; // 1 день
 
     private SecretKey getKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());

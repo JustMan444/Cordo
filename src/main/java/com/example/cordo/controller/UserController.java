@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
  * позволяет оформить покупку подписки (/api/v1/subscriptions/subscribe)
  * Валидация:
  * Присуствует см читать папку records
+ * Защита:
+ * Присуствует JWT токен права см читать SecurityConfig
  */
 
 
