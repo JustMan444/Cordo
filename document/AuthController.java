@@ -1,6 +1,6 @@
 package com.example.cordo.controller;
 
-import com.example.cordo.entity.dto.LoginRequest;
+import com.example.cordo.entity.records.LoginRequest;
 import com.example.cordo.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
