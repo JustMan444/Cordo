@@ -20,7 +20,7 @@ import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-    //TODO: И все это мне придется учить и вникать сомнительная затея
+    //TODO: И все это мне придется учить и вникать сомнительная затея Изменено: Впрочем я добрался до этого файла!
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
