@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
  * <h2>Методы: </h2>
  * <ul>
  * <li>Регистрирует пользователей (/api/v1/users) {@link UserController#registerUser(RegisterRequest)  regUser}</li>
- * <li>Пополняет баланс (/api/v1/users/topUp) {@link UserController#topUpUserBalance(TopUpRequest) topUpUserBalance}</li>
- * <li>Позволяет оформить покупку подписки (/api/v1/subscriptions/subscribe) {@link UserController#buy_subscribe(SubscribeRequest) buySubscribe}</li>
+ * <li>Пополняет баланс (/api/v1/users/topUp) {@link UserController#topUpUserBalance(TopUpRequest, Authentication)} (TopUpRequest) topUpUserBalance}</li>
+ * <li>Позволяет оформить покупку подписки (/api/v1/subscriptions/subscribe) {@link UserController#buy_subscribe(SubscribeRequest, Authentication)} (SubscribeRequest) buySubscribe}</li>
  * </ul>
  * </p>
  * <p>
@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.*;
  * </p>
  *
  * @since Beta 0.9
- * @version 2.0
+ * @version 2.1
  * @author JustMan444
  *
  */
