@@ -25,7 +25,7 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)   // "ROLE_USER"
+                .map(GrantedAuthority::getAuthority)
                 .toList();
 
         return Jwts.builder()
