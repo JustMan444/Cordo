@@ -44,19 +44,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        if (jwtService.isValid(token)) {
-            String email = jwtService.extractEmail(token);
-            List<String> roles = jwtService.extractRoles(token);
+        try {
+            if (jwtService.isValid(token)) {
+                String email = jwtService.extractEmail(token);
+                List<String> roles = jwtService.extractRoles(token);
 
-            List<GrantedAuthority> authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .map(a -> (GrantedAuthority) a)
-                    .toList();
+                List<GrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .map(a -> (GrantedAuthority) a)
+                        .toList();
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(
-                    email, null, authorities
-            );
-            SecurityContextHolder.getContext().setAuthentication(auth);
+                Authentication auth = new UsernamePasswordAuthenticationToken(
+                        email, null, authorities
+                );
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+            response.setStatus(401);
+            return;
         }
 
         filterChain.doFilter(request, response);

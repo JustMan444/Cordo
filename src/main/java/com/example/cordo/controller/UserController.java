@@ -9,6 +9,7 @@ import com.example.cordo.service.PlayerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /** <h1>Главный RestController</h1>
@@ -56,15 +57,17 @@ public class UserController {
     }
     @PatchMapping("/users/topUp")
     public ResponseEntity<UserDTO> topUpUserBalance( //запомним тут был amount но пришлось простится
-            @Valid @RequestBody TopUpRequest request
+            @Valid @RequestBody TopUpRequest request,
+            Authentication authentication
             )
     {
-        return ResponseEntity.ok(playerService.topUpBalance(request.userId(), request.amount()));
+        return ResponseEntity.ok(playerService.topUpBalance(authentication.getName(), request.amount()));
     }
     @PatchMapping("/subscriptions/subscribe")
     public ResponseEntity<UserDTO> buy_subscribe(
-            @Valid @RequestBody SubscribeRequest request
+            @Valid @RequestBody SubscribeRequest request,
+            Authentication authentication
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(playerService.buySubcribe(request.userId(), request.planId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(playerService.buySubcribe(authentication.getName(), request.planId()));
     }
 }
