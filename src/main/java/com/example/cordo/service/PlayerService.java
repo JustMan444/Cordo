@@ -2,12 +2,13 @@ package com.example.cordo.service;
 
 import com.example.cordo.entity.*;
 import com.example.cordo.entity.dto.UserDTO;
-import com.example.cordo.exception.BalanceLimitExceededException;
-import com.example.cordo.exception.PlanNotFoundException;
-import com.example.cordo.exception.UserNotFoundException;
+import com.example.cordo.globalExceptionHandler.exception.BalanceLimitExceededException;
+import com.example.cordo.globalExceptionHandler.exception.PlanNotFoundException;
+import com.example.cordo.globalExceptionHandler.exception.UserNotFoundException;
 import com.example.cordo.repository.jpa.UserSubscriptionRepository;
 import com.example.cordo.repository.jpa.UsersRepository;
 import com.example.cordo.repository.redis.PlanRepository;
+import com.example.cordo.security.BaseSecurity;
 import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

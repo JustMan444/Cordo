@@ -1,5 +1,6 @@
 package com.example.cordo.config;
  // я попытаюсь написать все по памяти
+import com.example.cordo.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

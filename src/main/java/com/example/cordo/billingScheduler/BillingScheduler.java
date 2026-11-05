@@ -1,4 +1,4 @@
-package com.example.cordo;
+package com.example.cordo.billingScheduler;
 
 import com.example.cordo.entity.Subscribe;
 import com.example.cordo.entity.User;

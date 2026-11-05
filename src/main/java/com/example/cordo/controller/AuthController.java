@@ -17,11 +17,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth") //"security/api/v1"
-public class I_Always_Comeback {
+public class AuthController{ //I_Always_Comeback это было мое название но чертова полировка... :(
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
-    public I_Always_Comeback(JwtService jwtService,AuthenticationManager authManager) {
+    public AuthController(JwtService jwtService,AuthenticationManager authManager) {
         this.jwtService = jwtService;
         this.authManager = authManager;
     }

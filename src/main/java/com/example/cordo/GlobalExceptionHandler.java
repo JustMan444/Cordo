@@ -1,6 +1,9 @@
 package com.example.cordo;
 
-import com.example.cordo.exception.*;
+import com.example.cordo.exception.BalanceLimitExceededException;
+import com.example.cordo.exception.PlanNotFoundException;
+import com.example.cordo.exception.ResourceNotFoundException;
+import com.example.cordo.exception.UserNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +27,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleBadRequest(BalanceLimitExceededException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
-    @ExceptionHandler(NullPointException.class)
-    public ResponseEntity<String> NullKapec(NullPointException ex) {
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> nullPointerException(NullPointerException ex) { //Бэкенд место жесткое если на время MVP прикольные названия были актуальны то на полировке придется сносить это явный минус и плюс ведь код это исскуство и здесь оно выражено по другому
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Internal_Server_Error");
     }
@@ -52,12 +55,6 @@ public class GlobalExceptionHandler {
 
         // Отдаем красивый JSON с ошибками полей и статусом 400 Bad Request
         return ResponseEntity.badRequest().body(errors);
-    }
-    @ExceptionHandler(UserOptimisticLockingException.class)
-    public ResponseEntity<String> UserOptimistLockException (
-            UserOptimisticLockingException ex
-    ) {
-        return ResponseEntity.status(409).body("Currently, the user field is occupied by another process.");
     }
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, String>> handleAuth(AuthenticationException e) {
