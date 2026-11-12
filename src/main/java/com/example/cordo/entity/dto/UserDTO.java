@@ -3,8 +3,10 @@ package com.example.cordo.entity.dto;
 
 import com.example.cordo.entity.User;
 
+import java.math.BigDecimal;
+
 public class UserDTO {
-    private int balance;
+    private BigDecimal balance;
     private String email;
     private String userId;
 
@@ -16,7 +18,7 @@ public class UserDTO {
     }
 
 
-    public int getBalance() {return balance;}
+    public BigDecimal getBalance() {return balance;}
 
     public String getEmail() {return email;}
 

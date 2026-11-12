@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 
 @Service
 public class PlayerService {
@@ -29,7 +31,7 @@ public class PlayerService {
      * <p>
      * <ul>
      * <li>Регистрирование нового пользователя {@link PlayerService#regNewUser(String, String)}</li>
-     * <li>Пополнения баланса {@link PlayerService#topUpBalance(String, int)}</li>
+     * <li>Пополнения баланса {@link PlayerService#topUpBalance(String, BigDecimal)}</li>
      * <li>Покупка подписки {@link PlayerService#buySubcribe(String, String)}</li>
      * </ul>
      * </p>
@@ -68,14 +70,14 @@ public class PlayerService {
         return dto;
     }
     @Transactional
-    public UserDTO topUpBalance(String email,int amount) {
+    public UserDTO topUpBalance(String email,BigDecimal amount) {
         User user = usersRepository.findByEmailForUpdate(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + email));;
-        if(user.getBalance() + amount > maxBalance) {
+        if(user.getBalance().add(amount).compareTo(new BigDecimal(maxBalance)) >= 1) {
             logger.debug("Very big balance error bad request");
             throw new BalanceLimitExceededException("Balance limit exceeded");
         }
-        user.setBalance(user.getBalance() + amount);
+        user.setBalance(user.getBalance().add(amount));
 
         User realuser = usersRepository.saveAndFlush(user);
         UserDTO userDTO = new UserDTO(realuser);
@@ -88,11 +90,11 @@ public class PlayerService {
         if(user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
-        if(user.getBalance() + amount > maxBalance) {
+        if(user.getBalance().add(new BigDecimal(amount)).compareTo(new BigDecimal(maxBalance)) >= 1) {
             logger.debug("Very big balance error bad request");
             throw new BalanceLimitExceededException("Balance limit exceeded");
         }
-        user.setBalance(user.getBalance() + amount);
+        user.setBalance(user.getBalance().add(new BigDecimal(amount)));
 
         User realuser = new User("а","g");//usersRepository.save(user);
         UserDTO userDTO = new UserDTO(realuser);
@@ -105,11 +107,11 @@ public class PlayerService {
         Subscribe subscribe = planRepository.findById(planID)
                 .orElseThrow(() -> new PlanNotFoundException("Plan not found"));
 
-        if(user.getBalance() < subscribe.getMoneyInMonth()) {
+        if(user.getBalance().compareTo(subscribe.getMoneyInMonth()) == -1) {
             logger.warn("balance is too little");
             throw new BalanceLimitExceededException("balance very little");
         }
-        user.setBalance(user.getBalance() - subscribe.getMoneyInMonth());
+        user.setBalance(user.getBalance().subtract(subscribe.getMoneyInMonth()));
         User real = usersRepository.saveAndFlush(user);
         UserSubscription sub = new UserSubscription(user.getUserId(), planID, "ACTIVE");
         sub.setNextBillingDate(java.time.LocalDateTime.now().plusMonths(1));

@@ -11,11 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
-
-
-
 
 @Component
 public class BillingScheduler {
@@ -43,14 +39,14 @@ public class BillingScheduler {
                     logger.info("Error plan not found");
                     continue;
                 }
-                if(user.getBalance() < subscribe.getMoneyInMonth()) {
+                if(user.getBalance().compareTo(subscribe.getMoneyInMonth()) == -1) {
                     logger.info("Error");
                     sub.setStatus("SUSPENDED");
                     userSubscriptionRepository.save(sub);
                     continue;
                 }
                 sub.setNextBillingDate(sub.getNextBillingDate().plusMonths(1));
-                user.setBalance(user.getBalance() - subscribe.getMoneyInMonth());
+                user.setBalance(user.getBalance().subtract(subscribe.getMoneyInMonth()));
                 usersRepository.save(user);
                 userSubscriptionRepository.save(sub);
             }

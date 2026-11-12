@@ -16,6 +16,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.math.BigDecimal;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -67,7 +68,7 @@ class CordoApplicationTests {
             ExecutorService executorServiceTest = Executors.newFixedThreadPool(threads);
             Runnable task = () -> {
                User realTestUser = usersRepository.findById(testUserDto.getUserId()).orElseThrow();
-                realTestUser.setBalance(realTestUser.getBalance() + 20);
+                realTestUser.setBalance(realTestUser.getBalance().add(new BigDecimal(20)));
 
                 usersRepository.saveAndFlush(realTestUser);
                 f[0] = realTestUser;

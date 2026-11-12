@@ -3,16 +3,17 @@ package com.example.cordo.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @RedisHash("Plan")
 public class Subscribe implements Serializable {
 
-    private int moneyInMonth;
+    private BigDecimal moneyInMonth;
 
     @Id
     private String name;
 
-    public Subscribe(int moneyInMonth, String name) {
+    public Subscribe(BigDecimal moneyInMonth, String name) {
         this.moneyInMonth = moneyInMonth;
         this.name = name;
     }
@@ -21,11 +22,11 @@ public class Subscribe implements Serializable {
 
     }
 
-    public int getMoneyInMonth() {
+    public BigDecimal getMoneyInMonth() {
         return moneyInMonth;
     }
 
-    public void setMoneyInMonth(int moneyInMonth) {
+    public void setMoneyInMonth(BigDecimal moneyInMonth) {
         this.moneyInMonth = moneyInMonth;
     }
 

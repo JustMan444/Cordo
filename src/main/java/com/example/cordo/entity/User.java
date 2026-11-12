@@ -2,10 +2,12 @@ package com.example.cordo.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "users")
 public class User {
-    private int balance;
+    private BigDecimal balance;
     private String password;
     private String email;
     @Id
@@ -17,15 +19,11 @@ public class User {
     @Column(nullable = false)
     private Role role = Role.USER;
 
-    @Version
-    @Column(nullable = false)
-    private Long version;
-
     public User() {
 
     }
 
-    public User(int balance, String password, String email, String userId) {
+    public User(BigDecimal balance, String password, String email, String userId) {
         this.balance = balance;
         this.password = password;
         this.email = email;
@@ -35,7 +33,7 @@ public class User {
     public User(String password, String email) {
         this.password = password;
         this.email = email;
-        this.balance = 0;
+        this.balance = BigDecimal.valueOf(0);
     }
 
 
@@ -43,9 +41,9 @@ public class User {
 
     public void setPassword(String password) {this.password = password;}
 
-    public int getBalance() {return balance;}
+    public BigDecimal getBalance() {return balance;}
 
-    public void setBalance(int balance) {this.balance = balance;}
+    public void setBalance(BigDecimal balance) {this.balance = balance;}
 
     public String getEmail() {return email;}
 
@@ -53,13 +51,7 @@ public class User {
 
     public String getUserId() {return userId;}
 
-    public void setUserId(String userId) {this.userId = userId;}
-
     public Role getRole() {return role;}
 
     public void setRole(Role role) {this.role = role;}
-
-    public Long getVersion() {return version;}
-
-    public void setVersion(Long version) {this.version = version;}
 }
