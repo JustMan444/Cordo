@@ -16,28 +16,27 @@ import org.springframework.web.bind.annotation.*;
  * <p>
  * <h2>Методы: </h2>
  * <ul>
- * <li>Регистрирует пользователей (/api/v1/users) {@link UserController#registerUser(RegisterRequest)  regUser}</li>
- * <li>Пополняет баланс (/api/v1/users/topUp) {@link UserController#topUpUserBalance(TopUpRequest, Authentication)} (TopUpRequest) topUpUserBalance}</li>
- * <li>Позволяет оформить покупку подписки (/api/v1/subscriptions/subscribe) {@link UserController#buy_subscribe(SubscribeRequest, Authentication)} (SubscribeRequest) buySubscribe}</li>
+ * <li>Регистрирует пользователей (/api/v1/users) {@link UserController#registerUser(RegisterRequest)}</li>
+ * <li>Пополняет баланс (/api/v1/users/topUp) {@link UserController#topUpUserBalance(TopUpRequest, Authentication)}</li>
+ * <li>Позволяет оформить покупку подписки (/api/v1/subscriptions/subscribe) {@link UserController#buySubscribe(SubscribeRequest, Authentication)}</li>
  * </ul>
  * </p>
  * <p>
  * <h2>Валидация: </h2>
  * <ul>
- * <li>Присуствует см читать папку records {@link com.example.cordo.entity.records.LoginRequest logRequest} {@link RegisterRequest regRequest} {@link SubscribeRequest subcriveRequest} {@link TopUpRequest topUpRequest}</li>
+ * <li>Присутствует {@link com.example.cordo.entity.records.LoginRequest logRequest} {@link RegisterRequest regRequest} {@link SubscribeRequest subcriveRequest} {@link TopUpRequest topUpRequest}</li>
  * </ul>
  * </p>
  * <p>
  * <h2>Защита: </h2>
  * <ul>
- * <li>Присуствует JWT токен {@link JwtAuthFilter JwtFilter}, права {@link com.example.cordo.entity.Role roles},см читать SecurityConfig {@link com.example.cordo.config.SecurityConfig securityConfig}</li>
+ * <li>Присутствует JWT токен {@link JwtAuthFilter JwtFilter}, права {@link com.example.cordo.entity.Role roles},см читать SecurityConfig {@link com.example.cordo.config.SecurityConfig securityConfig}</li>
  * </ul>
  * </p>
  *
- * @since Beta 0.9
- * @version 2.1
+ * @since 0.9
+ * @version 2.2.1
  * @author JustMan444
- *
  */
 
 
@@ -63,8 +62,8 @@ public class UserController {
     {
         return ResponseEntity.ok(playerService.topUpBalance(authentication.getName(), request.amount()));
     }
-    @PatchMapping("/subscriptions/subscribe")
-    public ResponseEntity<UserDTO> buy_subscribe(
+    @PostMapping("/subscriptions/subscribe")
+    public ResponseEntity<UserDTO> buySubscribe(
             @Valid @RequestBody SubscribeRequest request,
             Authentication authentication
     ) {

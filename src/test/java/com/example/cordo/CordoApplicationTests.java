@@ -4,7 +4,7 @@ import com.example.cordo.entity.User;
 import com.example.cordo.entity.dto.UserDTO;
 import com.example.cordo.repository.jpa.UsersRepository;
 import com.example.cordo.service.PlayerService;
-import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
@@ -23,16 +23,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest
-@Transactional
 @Testcontainers
 class CordoApplicationTests {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PlayerService.class);
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName("Cordo-test-official-oh-my-god-this-is-real-test")
-                    .withUsername("just Elon Mask") //если меня возьмут на работу в spaceX я покажу им этот код
-                    .withPassword("880075525");
+                  //  .withDatabaseName("Cordo-test-official-oh-my-god-this-is-real-test")
+                    .withDatabaseName("DataBase")
+                   // .withUsername("just Elon Mask") //если меня возьмут на работу в spaceX я покажу им этот код
+                    .withUsername("postgres")
+                  //  .withPassword("880075525");
+                    .withPassword("41424344");
     @DynamicPropertySource
     static void missionOverLord(DynamicPropertyRegistry tetyaLenya) { //за такие названия меня возьмут в гугл
         tetyaLenya.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
@@ -53,20 +55,21 @@ class CordoApplicationTests {
                 "\n"
         )
         void FindUserByIdForUpdate_ExistsUser30requests30Threads_return30Users() {
+
             int requests = 1;
             User[] f = new User[requests];
             int threads = 1;
             String password = "misterDrist";
             String mail = "email";
+            //give
             UserDTO testUserDto = playerService.regNewUser(password,mail);
+
             ExecutorService executorServiceTest = Executors.newFixedThreadPool(threads);
             Runnable task = () -> {
-               User realTestUser = usersRepository.findByIdForUpdate(testUserDto.getUserId()).orElseThrow(
-                        null
-                );
+               User realTestUser = usersRepository.findById(testUserDto.getUserId()).orElseThrow();
                 realTestUser.setBalance(realTestUser.getBalance() + 20);
 
-                usersRepository.save(realTestUser);
+                usersRepository.saveAndFlush(realTestUser);
                 f[0] = realTestUser;
             };
             for (int i = 0;i < requests;i++) {
@@ -83,9 +86,15 @@ class CordoApplicationTests {
                     Thread.currentThread().interrupt();
                 }
             }
+
             assertEquals(requests * 20,f[0].getBalance());
 
 
         }
+    @AfterEach
+    void tearDown() {
+        usersRepository.deleteAll();
+    }
+
 
 }

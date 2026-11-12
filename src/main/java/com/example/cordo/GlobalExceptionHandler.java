@@ -4,6 +4,7 @@ import com.example.cordo.exception.BalanceLimitExceededException;
 import com.example.cordo.exception.PlanNotFoundException;
 import com.example.cordo.exception.ResourceNotFoundException;
 import com.example.cordo.exception.UserNotFoundException;
+import org.jspecify.annotations.NonNull;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 
 @ControllerAdvice
@@ -24,7 +26,7 @@ public class GlobalExceptionHandler {
 
     // Если баланс превышен — клиент получит 400 Bad Request
     @ExceptionHandler(BalanceLimitExceededException.class)
-    public ResponseEntity<String> handleBadRequest(BalanceLimitExceededException ex) {
+    public ResponseEntity<@NonNull String> handleBadRequest(BalanceLimitExceededException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
     @ExceptionHandler(NullPointerException.class)

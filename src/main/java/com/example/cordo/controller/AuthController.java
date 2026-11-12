@@ -25,7 +25,7 @@ public class AuthController{ //I_Always_Comeback это было мое назв
         this.jwtService = jwtService;
         this.authManager = authManager;
     }
-    @PostMapping("login/")
+    @PostMapping("login") //login/ работал но пришлось для читаемости
     public Map<String,String> login(@RequestBody LoginRequest request) {
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(),request.password())

@@ -11,18 +11,30 @@ import com.example.cordo.repository.redis.PlanRepository;
 import com.example.cordo.security.BaseSecurity;
 import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class PlayerService {
 
     /**
-     * Сервер управления пользователями
-     * Методы:
-     * Регистрирование нового пользователя "regNewUser(String password,String email)"
-     * Пополнения баланса "topUpBalance(String id,int amount)"
-     * Покупка подписки "buySubcribe( userID,String planID)"
+     * <p>
+     * <b><h1>Сервис управления пользователями</h1></b>
+     * </p>
+     * <p>
+     * <h3>Методы:</h3>
+     * </p>
+     * <p>
+     * <ul>
+     * <li>Регистрирование нового пользователя {@link PlayerService#regNewUser(String, String)}</li>
+     * <li>Пополнения баланса {@link PlayerService#topUpBalance(String, int)}</li>
+     * <li>Покупка подписки {@link PlayerService#buySubcribe(String, String)}</li>
+     * </ul>
+     * </p>
+     * @version 1.1
+     * @author JustMan444
      */
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PlayerService.class);
     private UsersRepository usersRepository;
@@ -30,6 +42,7 @@ public class PlayerService {
     private PlanRepository planRepository;
     private UserSubscriptionRepository userSubscriptionRepository;
     private int maxBalance;
+    @Autowired
     public PlayerService(UsersRepository usersRepository,
                          BaseSecurity baseSecurity,
                          PlanRepository planRepository,
@@ -41,6 +54,7 @@ public class PlayerService {
         this.userSubscriptionRepository = userSubscriptionRepository;
         this.maxBalance = maxBalance;
     }
+    public PlayerService() {}
 
 
     @Transactional
@@ -54,9 +68,9 @@ public class PlayerService {
         return dto;
     }
     @Transactional
-    public UserDTO topUpBalance(String id,int amount) {
-        User user = usersRepository.findByIdForUpdate(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found: " + id));;
+    public UserDTO topUpBalance(String email,int amount) {
+        User user = usersRepository.findByEmailForUpdate(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + email));;
         if(user.getBalance() + amount > maxBalance) {
             logger.debug("Very big balance error bad request");
             throw new BalanceLimitExceededException("Balance limit exceeded");
@@ -85,9 +99,9 @@ public class PlayerService {
         return new UserDTO(new User());
     }
     @Transactional
-    public UserDTO buySubcribe(String userId, String planID) {
-        User user = usersRepository.findByIdForUpdate(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public UserDTO buySubcribe(String email, String planID) {
+        User user = usersRepository.findByEmailForUpdate(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         Subscribe subscribe = planRepository.findById(planID)
                 .orElseThrow(() -> new PlanNotFoundException("Plan not found"));
 

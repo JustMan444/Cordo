@@ -2,9 +2,12 @@ package com.example.cordo;
 import com.example.cordo.controller.UserController;
 import com.example.cordo.entity.User;
 import com.example.cordo.entity.dto.UserDTO;
-import com.example.cordo.globalExceptionHandler.exception.BalanceLimitExceededException;
+import com.example.cordo.exception.BalanceLimitExceededException;
+import com.example.cordo.repository.jpa.UserSubscriptionRepository;
 import com.example.cordo.repository.jpa.UsersRepository;
+import com.example.cordo.repository.redis.PlanRepository;
 import com.example.cordo.security.BaseSecurity;
+import com.example.cordo.service.JwtService;
 import com.example.cordo.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -28,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import org.springframework.http.MediaType;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,13 +46,13 @@ public class Mini_Tests {
     void save_existsUser_saveUserAndReturn() {
         when(baseSecurity.encodePassword(anyString())).thenReturn("ENCODED");
          User user1 = new User(baseSecurity.encodePassword("I AM MISTER BEAST!!!"),"880075525@mail.ru");
-        when(usersRepository.save(any(User.class)))
+        when(usersRepository.saveAndFlush(any(User.class)))
                 .thenReturn(user1);
        UserDTO user =  playerService.regNewUser("I AM MISTER BEAST!!!","880075525@mail.ru");
         assertEquals(new UserDTO(new User("ENCODED", "880075525@mail.ru")).getUserId(),user.getUserId());
         assertEquals("880075525@mail.ru",user.getEmail());
         assertEquals(new UserDTO(new User("ENCODED", "880075525@mail.ru")).getBalance(),user.getBalance());
-        verify(usersRepository,times(1)).save(any(User.class));
+        verify(usersRepository,times(1)).saveAndFlush(any(User.class));
         verify(baseSecurity,times(2)).encodePassword(anyString());
     }
 
@@ -103,9 +105,11 @@ public class Mini_Tests {
         MockMvc mockMvc;
     @MockitoBean
     PlayerService playerService;
+    @MockitoBean
+        JwtService jwtService;
     @Test
         void registering_returnUserDto() throws Exception{
-        logger.warn("ПЕРЕД СТАРТОМ ОТКЛЮЧИТЕ Редис и JPA репозитории под корень они нахуй взорвут тест не потому что у меня руки из жопы а потому что у некоторых разработчиков спринга");
+    //    logger.warn("ПЕРЕД СТАРТОМ ОТКЛЮЧИТЕ Редис и JPA репозитории под корень они нахуй взорвут тест не потому что у меня руки из жопы а потому что у некоторых разработчиков спринга");
         when(playerService.regNewUser(anyString(),anyString()))
                 .thenReturn(new UserDTO(new User("Где деньги взять?Давно известно...", "CommandTesters@mail.ru")));
         mockMvc.perform(post("/api/v1/users")

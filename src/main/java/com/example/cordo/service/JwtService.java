@@ -12,6 +12,24 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.List;
 
+    /**
+     * <p>
+     *     <b><h1>Сервис для JWT token</h1></b>
+     * </p>
+     * <p>
+     *     <h3>Методы в нем:</h3>
+     * </p>
+     * <p>
+     *     <ul>
+     *         <li>Метод для получения ключа для генерации {@link JwtService#getKey()}</li>
+     *         <li>Метод для генерации токена {@link JwtService#generateToken(UserDetails)}</li>
+     *         <li>Метод для получения email {@link JwtService#extractEmail(String)}</li>
+     *         <li>Метод для получения ролей {@link JwtService#extractRoles(String)}</li>
+     *         <li>Метод для валидации токена {@link JwtService#isValid(String)}</li>
+     *         <li>Метод для получения информации из JWT token {@link JwtService#parseClaims(String)}</li>
+     *     </ul>
+     * </p>
+     */
 @Service
 public class JwtService {
     @Value("${jwt.secret}")
